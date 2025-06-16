@@ -1,0 +1,30 @@
+# Obstacle Avoiding Robot – STM32 Embedded Project
+
+## 🔍 Project Summary
+This project is an autonomous robot that uses an ultrasonic sensor to detect and avoid obstacles in real time. It is built using the STM32 Discovery board, programmed in Embedded C, and powered by a custom motor driver and chassis.
+
+## 🎯 Objectives
+- Learn to interface STM32 with external sensors and actuators.
+- Build and document a fully autonomous robot.
+- Develop Embedded C and real-time programming skills.
+- Maintain a clean and professional GitHub repository as part of the HouseOfVulcan lab series.
+
+## 🧰 Parts List
+- STM32 Discovery Board
+- RobotShop Chassis (w/ DC motors + battery pack)
+- TB6612FNG Dual Motor Driver
+- HC-SR04 Ultrasonic Sensor
+- HC-05 Bluetooth Module
+- 5V Mini Buck Converters
+- Breadboard, jumper wires, resistors
+- Soldering kit, electrical tape, multimeter
+
+## 🧪 Planned Features
+- Obstacle avoidance using ultrasonic distance sensing
+- Motor speed control using PWM
+- Modular code for easy upgrade (Bluetooth control, sensors, etc.)
+
+## 🔧 Dev Environment
+- STM32CubeIDE
+- GitHub for version control
+- GitHub Desktop for local repo management
