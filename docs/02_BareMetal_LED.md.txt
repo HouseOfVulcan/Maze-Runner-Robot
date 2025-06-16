@@ -1,0 +1,20 @@
+# Bare-Metal LED Blink on STM32F407 Discovery
+
+This demo turns on and blinks the green onboard LED (PD12) using **bare-metal C**, with **no HAL or CubeMX**.
+
+## 🔧 Key Concepts
+- RCC peripheral clock enabled via direct memory access
+- GPIO configured using bitmasking on MODER
+- Output toggled via direct writes to ODR
+- Delay loop implemented using a simple for-loop
+
+## 💡 Addresses Used
+| Register | Address | Description |
+|----------|---------|-------------|
+| RCC_AHB1ENR | 0x40023830 | Enables GPIOD clock |
+| GPIOD_MODER | 0x40020C00 | Configures pin mode |
+| GPIOD_ODR | 0x40020C14 | Output data register |
+
+## ⚠️ Notes
+- This is a low-level test used to understand how embedded systems interact with hardware directly.
+- The LED is connected to PD12, which maps to LD4 (green) on the STM32F407 Discovery board.
