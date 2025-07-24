@@ -51,10 +51,6 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 - UART debug output
 - FSM expansion (Idle, Recovery, Patrol modes)
 
-## 🏛️ House of Vulcan 🛡️
-Forged under the guidance of **Vulcan**, this project embodies:
-> *Fortis et Exactus – Strong and Precise*  
-> *Per Ignem, Victoriam – Through Fire, Victory*
 
 
 
