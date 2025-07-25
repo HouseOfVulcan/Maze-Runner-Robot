@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-// Initializes the FSM (if needed in future)
+// Initializes the FSM
 void logic_init(void);
 
 // Executes one step of the obstacle-avoidance FSM
