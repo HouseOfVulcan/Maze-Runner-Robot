@@ -5,7 +5,7 @@
 #define RCC_AHB1ENR    (*(volatile uint32_t*) 0x40023830)
 #define GPIOB_MODER    (*(volatile uint32_t*) 0x40020400) // sets the mode of the pins
 #define GPIOB_OTYPER   (*(volatile uint32_t*) 0x40020404) // how the output signal behaves electrically
-#define GPIOB_ODR  	   (*(volatile uint32_t*) 0x40020404) // How the control motor behaves, hold output values
+#define GPIOB_ODR      (*(volatile uint32_t*) 0x40020414) // How the control motor behaves, hold output values
 void motors_init(void)
 {
 	RCC_AHB1ENR |= (1 << 1); //enable bit 1
