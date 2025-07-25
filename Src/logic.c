@@ -38,27 +38,27 @@ void obstacle_avoidance_fsm_step(void)
             uint32_t distance = get_distance_cm();
 
             if (distance == 0xFFFF)
-				{
-					stop_motors();
-					printf("Sensor Error\n");
-					current_state = STATE_ERROR;
-					break;
-				}
+		{
+		   stop_motors();
+		   printf("Sensor Error\n");
+		   current_state = STATE_ERROR;
+		   break;
+		}
 
             if (distance < SAFE_DISTANCE_CM)
-				{
-					stop_motors();
-					delay_ms(200);
+		{
+		   stop_motors();
+		   delay_ms(200);
 
-					move_backward();
-					delay_ms(BACKUP_MS);
+		   move_backward();
+		   delay_ms(BACKUP_MS);
 
-					current_state = (rand() % 2 == 0) ? STATE_TURN_LEFT : STATE_TURN_RIGHT;
-				}
+		   current_state = (rand() % 2 == 0) ? STATE_TURN_LEFT : STATE_TURN_RIGHT;
+		}
             else
-				{
-					move_forward();
-				}
+		{
+		   move_forward();
+		}
             break;
         }
 
