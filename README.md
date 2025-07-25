@@ -2,7 +2,7 @@
 
 Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sensor for real-time obstacle avoidance.
 
-## 🔧 Hardware
+## Hardware
 
 - **Microcontroller:** STM32F407 Discovery
 - **Motor Driver:** TB6612FNG (x2 for 4 motors)
@@ -15,7 +15,7 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
   - `PB0–PB2`, `PB10`, `PB12–PB15` – Motor IN1/IN2 pins
   - `PB11` – STBY pin for TB6612FNG
 
-## 🧠 Behavior
+## Behavior
 
 ### Finite State Machine (FSM):
 - **STATE_FORWARD** – Moves forward if clear
@@ -29,7 +29,7 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 - `BACKUP_MS = 400`
 - `IDLE_MS = 100`
 
-## 📂 Project Structure
+## Project Structure
 
 - `Inc/` – Header files (`*.h`)
 - `Src/` – Source files (`*.c`)
@@ -38,13 +38,13 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 - `sensor.c` – Ultrasonic pulse/echo capture
 - `logic.c` – FSM decision-making and state transitions
 
-## ⚙️ Build Notes
+## Build Notes
 
 - Written using **bare-metal C** (no HAL or STM32CubeMX)
 - Target clock: 168 MHz
 - Delay functions are blocking (not accurate for real-time scheduling)
 
-## 🛠️ Future Improvements
+## Future Improvements
 
 - PWM speed control
 - Interrupt-driven echo capture
