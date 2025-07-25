@@ -1,4 +1,4 @@
-#include "../inc/logic.h"
+#include "logic.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
