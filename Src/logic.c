@@ -21,17 +21,6 @@ typedef enum {
 // Track current FSM state
 static ObstacleAvoidanceState current_state = STATE_FORWARD;
 
-// ─────────────── Mock Dependencies ───────────────
-// These will be moved to motors.c/sensor.c later
-uint32_t get_distance_cm(void) { return 12; }
-void move_forward(void)  { printf("FORWARD\n"); }
-void move_backward(void) { printf("BACKWARD\n"); }
-void turn_left(void)     { printf("LEFT\n"); }
-void turn_right(void)    { printf("RIGHT\n"); }
-void stop_motors(void)   { printf("STOP\n"); }
-void delay_ms(uint32_t ms) { /* Placeholder */ }
-// ────────────────────────────────────────────────
-
 // Optional logic_init (can set random seed or reset state if needed)
 void logic_init(void)
 {
