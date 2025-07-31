@@ -53,7 +53,7 @@ void obstacle_avoidance_fsm_step(void)
 		   move_backward();
 		   delay_ms(BACKUP_MS);
 
-		   current_state = (rand() % 2 == 0) ? STATE_TURN_LEFT : STATE_TURN_RIGHT;
+		   current_state = (rand() % 2 == 0) ? STATE_TURN_LEFT : STATE_TURN_RIGHT; // randomly choose to go left or right
 		}
             else
 		{
