@@ -21,7 +21,7 @@ typedef enum {
 // Track current FSM state
 static ObstacleAvoidanceState current_state = STATE_FORWARD;
 
-// Optional logic_init (can set random seed or reset state if needed)
+// set random seed or reset state if needed
 void logic_init(void)
 {
     srand(time(NULL)); // Random turn direction
