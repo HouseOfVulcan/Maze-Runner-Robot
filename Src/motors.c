@@ -33,23 +33,23 @@ void motors_init(void)
 		GPIOB_ODR |= (1 << 11);  // Enable motor driver (STBY = HIGH)
 		// Initializing control pins to LOW
 		GPIOB_ODR &= ~( (1 << 0) | (1 << 1) | (1 << 2) |
-						(1 << 10) | (1 << 12) | (1 << 13) |
-						(1 << 14) | (1 << 15) );
+			      (1 << 10) | (1 << 12) | (1 << 13) |
+			      (1 << 14) | (1 << 15) );
 
 }
 
 /*
-Motor	    IN1	   IN2
-Left Front	PB0	    PB1
-Left Rear	PB2	    PB10
-Right Front	PB12	PB13
-Right Rear	PB14	PB15
+Motor	        IN1	IN2
+Left Front------PB0     PB1
+Left Rear-------PB2	PB10
+Right Front-----PB12	PB13
+Right Rear------PB14	PB15
 
 IN1	 IN2	Motor Behavior
-0	 0   	Brake (fast stop)
-0	 1	    Reverse
-1	 0	    Forward ✅
-1	 1	    Brake (fast stop again)
+ 0	  0   	Brake (fast stop)
+ 0	  1     Reverse
+ 1	  0	Forward ✅
+ 1	  1	Brake (fast stop again)
 */
 void move_forward(void)
 {
