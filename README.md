@@ -8,7 +8,7 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 - **Motor Driver:** TB6612FNG (x2 for 4 motors)
 - **Motors:** 48:1 DC gear motors
 - **Sensor:** HC-SR04 Ultrasonic
-- **Power:** External 5V motor supply (recommended)
+- **Power:** External 5V motor supply 
 - **GPIO Usage:**
   - `PA0` – Ultrasonic TRIG
   - `PA1` – Ultrasonic ECHO (TIM2_CH2)
