@@ -2,6 +2,8 @@
 
 Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sensor for real-time obstacle avoidance.
 
+# NOTE: Bot still incomplete, waiting on Driver to finish build. Motor code and logic not fully tested. Sensor code is tested and works 
+
 # Hardware
 
 - **Microcontroller:** STM32F407 Discovery
@@ -20,7 +22,7 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 ### Finite State Machine (FSM):
 - **STATE_FORWARD** – Moves forward if clear
 - **STATE_BACKWARD** – Reverses if object detected
-- **STATE_TURN_LEFT / RIGHT** – Random 90° turns to avoid
+- **STATE_TURN_LEFT / RIGHT** – Randomly chooses which way to turn
 - **STATE_ERROR** – Stops all motors on sensor timeout
 
 # Timing Constants:
