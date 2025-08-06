@@ -62,3 +62,4 @@ logic.c  – FSM decision-making and state transitions
 - Interrupt-driven echo capture
 - UART debug output
 - FSM expansion (Idle, Recovery, Patrol modes)
+- Route tracking and decision memory for adaptive navigation
