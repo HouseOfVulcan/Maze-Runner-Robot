@@ -27,7 +27,7 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 
 **Timing Constants:**
 - `SAFE_DISTANCE_CM = 15`
-- `TURN_90_MS = 1000` *(adjust for real-world 90°)*
+- `TURN_90_MS = 1000`
 - `BACKUP_MS = 400`
 - `IDLE_MS = 100`
 
@@ -44,7 +44,7 @@ logic.c  – FSM decision-making and state transitions
 ## Build
 - Written using **bare-metal C** (no HAL or STM32CubeMX)
 - Target clock: 168 MHz
-- Build with STM32CubeIDE or compatible ARM toolchain
+- Built with STM32CubeIDE
 - Flash to STM32F407 Discovery board
 
 ## Future Improvements
