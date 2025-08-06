@@ -7,10 +7,10 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 ## Overview
 
 This project implements an autonomous obstacle-avoiding robot using:
-	•	Bare-metal C (no HAL or STM32CubeMX)
-	•	Finite State Machine (FSM) for decision-making
-	•	Ultrasonic sensing for distance measurement
-	•	Modular source files for motors, sensors, and logic
+	- Bare-metal C (no HAL or STM32CubeMX)
+	- Finite State Machine (FSM) for decision-making
+	- Ultrasonic sensing for distance measurement
+	- Modular source files for motors, sensors, and logic
 
 Designed for educational purposes and as a foundational robotics build in the House of Vulcan project series.
 
