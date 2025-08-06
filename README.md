@@ -4,6 +4,16 @@ Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sen
 
 > **Note:** Bot still incomplete, waiting on driver to finish build. Motor code and logic not fully tested. Sensor code is tested and works.
 
+## Overview
+
+This project implements an autonomous obstacle-avoiding robot using:
+	•	Bare-metal C (no HAL or STM32CubeMX)
+	•	Finite State Machine (FSM) for decision-making
+	•	Ultrasonic sensing for distance measurement
+	•	Modular source files for motors, sensors, and logic
+
+Designed for educational purposes and as a foundational robotics build in the House of Vulcan project series.
+
 ## Hardware
 - **Microcontroller:** STM32F407 Discovery
 - **Motor Driver:** TB6612FNG (x2 for 4 motors)
