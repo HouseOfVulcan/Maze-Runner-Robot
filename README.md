@@ -2,7 +2,6 @@
 
 Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sensor for real-time obstacle avoidance on a STM32F407 Discovery board.
 
-> **Note:** Bot still incomplete, waiting on driver to finish build. Motor code and logic not fully tested. Sensor code is tested and works.
 
 ## Overview
 
