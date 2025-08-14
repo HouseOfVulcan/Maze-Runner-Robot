@@ -39,17 +39,17 @@ void motors_init(void)
 }
 
 /*
-Motor	        IN1	IN2
+Motor	        IN1	    IN2
 Left Front------PB0     PB1
-Left Rear-------PB2	PB10
+Left Rear-------PB2	    PB10
 Right Front-----PB12	PB13
 Right Rear------PB14	PB15
 
 IN1	 IN2	Motor Behavior
  0	  0   	Brake (fast stop)
  0	  1     Reverse
- 1	  0	Forward ✅
- 1	  1	Brake (fast stop again)
+ 1	  0	    Forward 
+ 1	  1	    Brake (fast stop again)
 */
 void move_forward(void)
 {
