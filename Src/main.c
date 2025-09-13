@@ -18,10 +18,12 @@
  ******************************************************************************
  */
 
-#include <stdint.h>
+#include "motors.h"
 #include "sensor.h"
 #include "logic.h"
-#include "motors.h"
+#include "delay.h"
+#include <stdio.h>
+#include <stdint.h>
 
 int main(void)
 {
