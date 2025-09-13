@@ -2,15 +2,8 @@
 #include "motors.h"
 #include "sensor.h"
 #include "delay.h"
-
 #include <stdint.h>
 #include <stdio.h>
-
-// Distance threshold and motion timing (in ms)
-#define SAFE_DISTANCE_CM 15
-#define TURN_90_MS       1000
-#define BACKUP_MS        400
-#define IDLE_MS          100
 
 typedef enum {
     STATE_FORWARD,
@@ -22,76 +15,105 @@ typedef enum {
 
 // FSM state
 static ObstacleAvoidanceState current_state = STATE_FORWARD;
-static int last_turn_was_left = 0; // 0 = right, 1 = left
+
+// Obstacle escape sequencing:
+// 0 = try left 90
+// 1 = try right 180 (face opposite)
+// 2 = dead-end escape: right 90
+static uint8_t num_turns = 0;
 
 void logic_init(void) {
-    // keep for future seeding / resets
     current_state = STATE_FORWARD;
-    last_turn_was_left = 0;
+    num_turns = 0;
 }
+
+uint32_t get_distance_cm(void);
 
 void obstacle_avoidance_fsm_step(void)
 {
     switch (current_state)
     {
-        case STATE_FORWARD:
-        {
-            uint32_t distance = get_distance_cm();
+    case STATE_FORWARD:
+    {
+        uint32_t distance = get_distance_cm();
 
-            if (distance == SENSOR_ERR) {
-                stop_motors();
-                printf("Sensor Error\n");
-                current_state = STATE_ERROR;
-                break;
-            }
-
-            if (distance < SAFE_DISTANCE_CM) {
-                stop_motors();
-                delay_ms(200);
-
-                move_backward();
-                delay_ms(BACKUP_MS);
-
-                stop_motors();
-                delay_ms(200);
-
-                // cycling thru lefts and rights
-                if (last_turn_was_left) {
-                    current_state = STATE_TURN_RIGHT;
-                    last_turn_was_left = 0;
-                } else {
-                    current_state = STATE_TURN_LEFT;
-                    last_turn_was_left = 1;
-                }
-            } else {
-                move_forward();
-            }
-            break;
+        if (distance == SENSOR_ERR) {
+            stop_motors();
+            current_state = STATE_ERROR;
+            return;
         }
 
-        case STATE_TURN_LEFT:
-            turn_left();
-            delay_ms(TURN_90_MS);
-            current_state = STATE_FORWARD;
-            break;
-
-        case STATE_TURN_RIGHT:
-            turn_right();
-            delay_ms(TURN_90_MS);
-            current_state = STATE_FORWARD;
-            break;
-
-        case STATE_ERROR:
+        if (distance < SAFE_DISTANCE_CM) {
             stop_motors();
-            delay_ms(2000);
-            current_state = STATE_FORWARD;
-            break;
+            delay_ms(200);
 
-        default:
+        if (num_turns ==0) {
+
+         //   motors_set_all_percent(BACKUP_DUTY);
+          //  move_backward();
+          //  delay_ms(BACKUP);
+
             stop_motors();
-            current_state = STATE_FORWARD;
-            break;
+            delay_ms(200);
+        }
+
+            num_turns++;
+
+            if (num_turns == 1) {
+                current_state = STATE_TURN_LEFT;   // first try: left 90
+            }
+            else {
+                current_state = STATE_TURN_RIGHT;  // second: right 180, third: right 90
+                return;
+            }
+
+        }
+        else {
+            // path clear: reset attempt sequence
+            motors_set_all_percent(CRUISE_DUTY);
+            move_forward();
+            num_turns = 0;
+        }
+
+        break;
     }
 
-    delay_ms(IDLE_MS); // small pause between cycles
+    case STATE_TURN_LEFT:
+        motors_set_all_percent(TURN_DUTY);
+        turn_left();
+        delay_ms(TURN_LEFT_90);
+        stop_motors();
+        delay_ms(100);
+        current_state = STATE_FORWARD;
+        break;
+
+    case STATE_TURN_RIGHT:
+        motors_set_all_percent(TURN_DUTY);
+        turn_right();
+        if (num_turns == 2) {
+            delay_ms(TURN_RIGHT_180);
+        }
+        // Dead end scenario
+        else {
+            delay_ms(TURN_RIGHT_90);
+            num_turns = 0;				// Dead-end escape: reset attempt counter
+        }
+        stop_motors();
+        delay_ms(100);
+        current_state = STATE_FORWARD;
+        break;
+
+    case STATE_ERROR:
+        stop_motors();
+        delay_ms(2000);
+        current_state = STATE_FORWARD;
+        break;
+
+    default:
+        stop_motors();
+        current_state = STATE_FORWARD;
+        break;
+    }
+
+    delay_ms(IDLE); // small pause between cycles
 }
