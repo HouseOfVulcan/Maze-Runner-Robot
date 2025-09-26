@@ -83,4 +83,5 @@ logic.c   – Finite state machine for obstacle avoidance / maze-solving behavio
 ## Future Improvements
 - LiDAR sensor
 - Multiple Ultrasonic sensors
+- Shortest path algorithm
 
