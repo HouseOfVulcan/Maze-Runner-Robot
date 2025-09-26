@@ -27,16 +27,15 @@
 
 int main(void)
 {
-    // Initialize all system components
-    sensor_init();     // Sets up GPIO + TIM2 for echo capture
-    motors_init();     // Configures GPIOB + sets STBY high
-    logic_init();      // Seeds RNG and sets default FSM state
+    // Order matters: hardware first, then logic
+    sensor_init();   // config PA0/PA1 + TIM2 capture
+    motors_init();   // sets PB pins, enables TIM4 PWM, STBY high
+    logic_init();    // sets initial FSM state(s)
 
-    // Main robot control loop
-    while (1)
-    {
-        obstacle_avoidance_fsm_step(); // Handles all movement logic
+    delay_ms(1000);	 // 5 sec pause
+
+    while (1) {
+        obstacle_avoidance_fsm_step();  // your FSM handles delays internally
+        // no extra delay needed here
     }
-
-    return 0;
 }
