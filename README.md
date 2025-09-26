@@ -74,12 +74,6 @@ sensor.c  – Ultrasonic trigger/echo measurement and distance calculation
 logic.c   – Finite state machine for obstacle avoidance / maze-solving behavior
 ```
 
-## Build
-- Written using **bare-metal C** (no HAL or STM32CubeMX)
-- Target clock: 168 MHz
-- Built with STM32CubeIDE
-- Flash to STM32F407 Discovery board
-
 ## Future Improvements
 - LiDAR sensor
 - Multiple Ultrasonic sensors
