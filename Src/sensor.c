@@ -90,14 +90,13 @@ void sensor_init(void)
     RCC_AHB1ENR |= (1 << 0);
 
     // Configure PA0 as output (TRIG)
-    GPIOA_MODER &=  ~(0x3 << 0); // Clear PA0 mode bits
-    GPIOA_MODER |=   (0x1 << 0); // PA0 = General purpose output
-    GPIOA_OTYPER &= ~(0x1 << 0);  // PA0 = Push-pull output
+    GPIOA_MODER &= ~(0x3 << 0); // Clear PA0 mode bits
+    GPIOA_MODER |=  (0x1 << 0); // PA0 = General purpose output
+    GPIOA_OTYPER &= ~(1 << 0);  // PA0 = Push-pull output
 
     // Configure PA1 as alternate function (ECHO - TIM2_CH2)
     GPIOA_MODER &= ~(0x3 << 2); // Clear PA1 mode bits
     GPIOA_MODER |=  (0x2 << 2); // PA1 = Alternate function
-    
     GPIOA_AFRL  &= ~(0xF << 4); // Clear PA1 AF bits
     GPIOA_AFRL  |=  (0x1 << 4); // PA1 = AF1 (TIM2_CH2)
 
@@ -131,27 +130,27 @@ static uint32_t measure_distance_cm(void)
     uint32_t timeout;
 
     // Clear any pending capture flags
-    TIM2_SR &= ~(1 << 2);     // Clear CC2IF
+    TIM2_SR &= ~(1 << 2); // Clear CC2IF
 
     // Reset timer counter
     TIM2_CNT = 0;
 
     // Set capture for rising edge
-    TIM2_CCER &= ~(1 << 5);   // CC2P = 0 (rising edge)
+    TIM2_CCER &= ~(1 << 5); // CC2P = 0 (rising edge)
 
     // Generate trigger pulse (10us minimum)
-    GPIOA_ODR |=  (1 << 0);   // Set PA0 high
-    delay_us(100);            // Wait 15us (more than minimum 10us)
-    GPIOA_ODR &= ~(1 << 0);   // Set PA0 low
+    GPIOA_ODR |= (1 << 0);   // Set PA0 high
+    delay_us(100);           // Wait 15us (more than minimum 10us)
+    GPIOA_ODR &= ~(1 << 0);  // Set PA0 low
 
     // Wait for rising edge with timeout
-    timeout = 50000;         // Adjust as needed
+    timeout = 50000; // Adjust as needed
     while (!(TIM2_SR & (1 << 2)) && --timeout)
     {
         // Check for timer overflow
         if (TIM2_CNT > 60000)
-        { // ~60ms timeout  
-            return 0xFFFF;   // Error: timeout
+        { // ~60ms timeout
+            return 0xFFFF; // Error: timeout
         }
     }
     if (timeout == 0) return 0xFFFF; // Timeout error
