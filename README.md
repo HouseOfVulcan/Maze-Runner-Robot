@@ -2,6 +2,16 @@
 
 Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sensor and utilizing the left-hand turn to solve a maze.
 
+## 🧩 Maze Runner First Trial
+
+Here’s a short demo of the robot attempting the maze:
+
+[![](https://img.youtube.com/vi/PouMPIgu-xY/0.jpg)](https://youtube.com/shorts/PouMPIgu-xY?si=E1u7Ti7sdZmMK841)
+
+*Click the image above to view on YouTube.*
+
+**Note:** This is an early run — turning isn’t perfect yet, but you can see the navigation logic in action.
+
 
 ## Overview
 
