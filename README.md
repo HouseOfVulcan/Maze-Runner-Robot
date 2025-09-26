@@ -1,4 +1,4 @@
-# Obstacle-Avoiding Robot
+# Maze-Runner Robot
 
 Bare-metal embedded C project to control a 4-motor robot using an ultrasonic sensor and utilizing the left-hand turn to solve a maze.
 
