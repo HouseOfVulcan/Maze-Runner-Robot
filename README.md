@@ -61,17 +61,17 @@ Designed for educational purposes and as a foundational robotics build in the Ho
 ## Project Structure
 ```
 Inc/     – Header files (*.h)
-delay.h  –
-motors.h – 
-sensor.h –
-logic.h  – 
+delay.h   – Function prototypes for timing/delay utilities
+motors.h  – Function prototypes and macros for motor control
+sensor.h  – Function prototypes and constants for ultrasonic sensor handling
+logic.h   – FSM states, function prototypes for maze logic / navigation
 
 Src/     – Source files (*.c)
-main.c   – System entry point
-delay.c  – 
-motors.c – Motor control functions
-sensor.c – Ultrasonic pulse/echo capture
-logic.c  – FSM decision-making and state transitions
+main.c    – System entry point; initializes peripherals and starts control loop
+delay.c   – Implements microsecond/millisecond delays (busy-wait or timer-based)
+motors.c  – Low-level H-bridge driver functions (forward, reverse, stop, brake)
+sensor.c  – Ultrasonic trigger/echo measurement and distance calculation
+logic.c   – Finite state machine for obstacle avoidance / maze-solving behavior
 ```
 
 ## Build
