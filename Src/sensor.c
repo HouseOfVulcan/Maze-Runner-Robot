@@ -25,7 +25,6 @@
 // Simple delay function (approximate)
 static void delay_us(uint32_t us) {
     // Rough delay for 168MHz system clock
-    // Adjust this value based on actual timing measurements
     volatile uint32_t count = us * 42; // ~4 cycles per loop at 168MHz
     while(count--) {
         __asm__("nop");
@@ -73,7 +72,7 @@ void sensor_init(void) {
     // Start timer
     TIM2_CR1 |= (1 << 0);       // CEN = 1: enable counter
 
-    // Wait for timer to stabilize
+    // Wait for sensor to stabilize
     delay_ms(100);
 }
 
@@ -88,7 +87,7 @@ static uint32_t measure_distance_cm(void) {
     TIM2_CNT = 0;
 
     // Set capture for rising edge
-    // Done again cuz we ser falling later down, want to reset when code runs again
+    // Done again cuz we set falling later down, want to reset when code runs again
     TIM2_CCER &= ~(1 << 5);   // CC2P = 0 (rising edge)
 
     // Generate trigger pulse (10us minimum)
@@ -144,7 +143,7 @@ static uint32_t measure_distance_cm(void) {
     // Distance = (pulse_width_us * speed_of_sound_cm_per_us) / 2
     // Speed of sound ≈ 0.0343 cm/µs
     // So: distance_cm = (pulse_width * 343) / 2000
-    uint32_t distance_cm = (pulse_width * 343) / 4000;
+    uint32_t distance_cm = (pulse_width * 343) / 4000; // /4000 cuase everything was reading twice the length, gotta figure out why still
     printf("Distance: %lu cm\r\n", distance_cm);
 
     return distance_cm;
