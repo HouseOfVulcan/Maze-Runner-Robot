@@ -35,7 +35,7 @@ int main(void)
     delay_ms(5000);	 // 5 sec pause
 
     while (1) {
-        obstacle_avoidance_fsm_step();  /
+        obstacle_avoidance_fsm_step();  // delays handled internally
        
     }
 }
