@@ -32,10 +32,10 @@ int main(void)
     motors_init();   // sets PB pins, enables TIM4 PWM, STBY high
     logic_init();    // sets initial FSM state(s)
 
-    delay_ms(1000);	 // 5 sec pause
+    delay_ms(5000);	 // 5 sec pause
 
     while (1) {
-        obstacle_avoidance_fsm_step();  // your FSM handles delays internally
-        // no extra delay needed here
+        obstacle_avoidance_fsm_step();  /
+       
     }
 }
