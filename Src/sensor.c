@@ -1,45 +1,3 @@
-/*
- * HC-SR04 Ultrasonic Sensor – Bare-Metal STM32 (PA0 = TRIG, PA1 = ECHO using TIM2_CH2)
- *
- * Step-by-Step System Overview:
- *
- * 1. RCC – Enable Peripheral Clocks
- *    - AHB1ENR → Enable GPIOA (for PA0 and PA1)
- *    - APB1ENR → Enable TIM2 (used for measuring ECHO pulse width)
- *
- * 2. GPIO Setup
- *    - PA0 (TRIG): Set as general-purpose output (MODER = 01), push-pull (OTYPER = 0)
- *    - PA1 (ECHO): Set to Alternate Function mode (MODER = 10), select AF1 (TIM2_CH2)
- *
- * 3. TIM2 Configuration (Input Capture Mode on CH2)
- *    - PSC: Set prescaler to divide 84 MHz → 1 µs tick (PSC = 83)
- *    - ARR: Set auto-reload to max (0xFFFF) so timer doesn't overflow prematurely
- *    - CCMR1: Configure CH2 as input, mapped to TI2 (PA1)
- *    - CCER:
- *        - Enable CH2 capture (CC2E = 1)
- *        - Start with rising edge (CC2P = 0), switch to falling later
- *    - CR1: Enable timer (CEN = 1)
- *
- * 4. Trigger the Sensor
- *    - Set PA0 HIGH for ~10 µs to start ultrasonic pulse
- *    - Then set PA0 LOW
- *
- * 5. Capture ECHO Pulse Duration
- *    - Wait for first capture event (rising edge), store startTime from CCR2
- *    - Switch to falling edge capture (set CC2P = 1)
- *    - Wait for second capture event (falling edge), store endTime
- *    - Calculate pulseDuration = endTime - startTime
- *
- * 6. Convert to Distance
- *    - Distance in cm = (pulseDuration * 0.0343) / 2
- *      (0.0343 cm/µs is the speed of sound; divide by 2 for round-trip)
- *
- * Notes:
- *    - PA1 input must be voltage-limited to 3.3V → use voltage divider if ECHO outputs 5V
- *    - This code uses polling (not interrupts) for simplicity
- *    - Can be extended for continuous reads or UART output
- */
-
 #include "sensor.h"
 #include <stdio.h>
 #include <stdint.h>
@@ -65,38 +23,35 @@
 #define TIM2_CNT       (*(volatile uint32_t*) 0x40000024) // CNT: Timer count value
 
 // Simple delay function (approximate)
-static void delay_us(uint32_t us)
-{
+static void delay_us(uint32_t us) {
     // Rough delay for 168MHz system clock
     // Adjust this value based on actual timing measurements
     volatile uint32_t count = us * 42; // ~4 cycles per loop at 168MHz
-    while(count--)
-    {
+    while(count--) {
         __asm__("nop");
     }
 }
 
-static void delay_ms(uint32_t ms)
-{
-    for(uint32_t i = 0; i < ms; i++)
-    {
+static void delay_ms(uint32_t ms) {
+    for(uint32_t i = 0; i < ms; i++) {
         delay_us(1000);
     }
 }
 
-void sensor_init(void)
-{
+void sensor_init(void) {
+
     // Enable GPIOA clock
     RCC_AHB1ENR |= (1 << 0);
 
     // Configure PA0 as output (TRIG)
-    GPIOA_MODER &= ~(0x3 << 0); // Clear PA0 mode bits
-    GPIOA_MODER |=  (0x1 << 0); // PA0 = General purpose output
-    GPIOA_OTYPER &= ~(1 << 0);  // PA0 = Push-pull output
+    GPIOA_MODER &=  ~(0x3 << 0); // Clear PA0 mode bits
+    GPIOA_MODER |=   (0x1 << 0); // PA0 = General purpose output
+    GPIOA_OTYPER &= ~(0x1 << 0);  // PA0 = Push-pull output
 
     // Configure PA1 as alternate function (ECHO - TIM2_CH2)
     GPIOA_MODER &= ~(0x3 << 2); // Clear PA1 mode bits
     GPIOA_MODER |=  (0x2 << 2); // PA1 = Alternate function
+
     GPIOA_AFRL  &= ~(0xF << 4); // Clear PA1 AF bits
     GPIOA_AFRL  |=  (0x1 << 4); // PA1 = AF1 (TIM2_CH2)
 
@@ -104,9 +59,7 @@ void sensor_init(void)
     RCC_APB1ENR |= (1 << 0);
 
     // Configure TIM2 for input capture
-    // For 168MHz system clock, TIM2 runs at 84MHz (APB1 * 2)
-    // To get 1µs ticks: 84MHz / 84 = 1MHz = 1µs per tick
-    TIM2_PSC = 83;              // Prescaler: 84MHz / 84 = 1MHz (1µs ticks)
+    TIM2_PSC = 83;              // Prescaler: 84MHz / (83 + 1) = 1MHz (1µs ticks)
     TIM2_ARR = 0xFFFF;          // Maximum auto-reload value
 
     // Configure CH2 as input capture
@@ -124,55 +77,51 @@ void sensor_init(void)
     delay_ms(100);
 }
 
-static uint32_t measure_distance_cm(void)
-{
+static uint32_t measure_distance_cm(void) {
     uint32_t start_time, end_time, pulse_width;
     uint32_t timeout;
 
-    // Clear any pending capture flags
-    TIM2_SR &= ~(1 << 2); // Clear CC2IF
+    // Clear any pending capture flags to avoid old junk data
+    TIM2_SR &= ~(1 << 2);     // Clear CC2IF
 
-    // Reset timer counter
+    // Reset timer counter to ensure accurate calculations later on
     TIM2_CNT = 0;
 
     // Set capture for rising edge
-    TIM2_CCER &= ~(1 << 5); // CC2P = 0 (rising edge)
+    // Done again cuz we ser falling later down, want to reset when code runs again
+    TIM2_CCER &= ~(1 << 5);   // CC2P = 0 (rising edge)
 
     // Generate trigger pulse (10us minimum)
-    GPIOA_ODR |= (1 << 0);   // Set PA0 high
-    delay_us(100);           // Wait 15us (more than minimum 10us)
-    GPIOA_ODR &= ~(1 << 0);  // Set PA0 low
+    GPIOA_ODR |=  (1 << 0);   // Set PA0 high
+    delay_us(100);            // Wait 100us (more than minimum 10us)
+    GPIOA_ODR &= ~(1 << 0);   // Set PA0 low
 
     // Wait for rising edge with timeout
-    timeout = 50000; // Adjust as needed
-    while (!(TIM2_SR & (1 << 2)) && --timeout)
+    while (!(TIM2_SR & (1 << 2)))
     {
         // Check for timer overflow
-        if (TIM2_CNT > 60000)
-        { // ~60ms timeout
-            return 0xFFFF; // Error: timeout
+        if (TIM2_CNT > 50000)
+        { // ~50ms timeout
+            return 0xFFFF;   // Error: timeout
         }
     }
-    if (timeout == 0) return 0xFFFF; // Timeout error
 
     // Capture start time and clear flag
-    start_time = TIM2_CCR2;
+    start_time = TIM2_CCR2; // CCR2 cuz it captures time event happens
     TIM2_SR &= ~(1 << 2);
 
     // Switch to falling edge
     TIM2_CCER |= (1 << 5); // CC2P = 1 (falling edge)
 
     // Wait for falling edge with timeout
-    timeout = 50000;
-    while (!(TIM2_SR & (1 << 2)) && --timeout)
+    while (!(TIM2_SR & (1 << 2)))
     {
-        // Check for timer overflow (max range ~400cm = ~24ms)
+        // Check for timer overflow
         if (TIM2_CNT > 30000)
-        { // ~30ms timeout
-            return 0xFFFF; // Error: timeout or out of range
+        { // ~30ms timeout, HC-SR04 max distance is 4m, ~23ms
+            return 0xFFFF;   // Error: timeout
         }
     }
-    if (timeout == 0) return 0xFFFF; // Timeout error
 
     // Capture end time and clear flag
     end_time = TIM2_CCR2;
@@ -184,7 +133,7 @@ static uint32_t measure_distance_cm(void)
         pulse_width = end_time - start_time;
     } else
     {
-        // Timer overflowed between captures
+        // just in case we hit an overflow sitch
         pulse_width = (0xFFFF - start_time) + end_time + 1;
     }
 
@@ -201,7 +150,6 @@ static uint32_t measure_distance_cm(void)
     return distance_cm;
 }
 
-uint32_t get_distance_cm(void)
-{
+uint32_t get_distance_cm(void) {
     return measure_distance_cm();
 }
