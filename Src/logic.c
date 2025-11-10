@@ -27,7 +27,6 @@ void logic_init(void) {
     num_turns = 0;
 }
 
-uint32_t get_distance_cm(void);
 
 void obstacle_avoidance_fsm_step(void)
 {
